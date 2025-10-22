@@ -32,7 +32,16 @@
 
   <script>
     document.getElementById("callApi").addEventListener("click", async () => {
-      const res = await fetch("/api/fake");
+
+      const response = await fetch('/api/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message: userMessage })
+});
+const data = await response.json();
+displayMessage('Jarvis', data.reply);
+
+      
       const data = await res.json();
       document.getElementById("output").innerText = data.message;
     });
