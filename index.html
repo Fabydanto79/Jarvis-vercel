@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frontend Demo Vercel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      margin-top: 60px;
+    }
+    h1 { color: #222; }
+    button {
+      background: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background: #0059c9; }
+  </style>
+</head>
+<body>
+  <h1>Frontend Demo per Vercel</h1>
+  <p>Premi il bottone per testare un endpoint API finto.</p>
+  <button id="callApi">Chiama API</button>
+  <p id="output"></p>
+
+  <script>
+    document.getElementById("callApi").addEventListener("click", async () => {
+      const res = await fetch("/api/fake");
+      const data = await res.json();
+      document.getElementById("output").innerText = data.message;
+    });
+  </script>
+</body>
+</html>
