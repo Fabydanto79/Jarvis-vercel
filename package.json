@@ -1,0 +1,11 @@
+{
+  "name": "jarvis-chat",
+  "version": "1.0.0",
+  "description": "Jarvis AI Chat with Claude",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
