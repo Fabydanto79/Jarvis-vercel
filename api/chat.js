@@ -13,29 +13,38 @@ module.exports = async (req, res) => {
     }
 
     const payload = {
-      model: process.env.CLAUDE_MODEL || 'claude-3-haiku',
-      prompt: `You are Jarvis, an assistant that is creative and professional.\n\nHuman: ${message}\n\nAssistant:`,
-      max_tokens_to_sample: 400
+      model: process.env.CLAUDE_MODEL || 'claude-3-haiku-20240307',
+      max_tokens: 1024,
+      messages: [
+        {
+          role: 'user',
+          content: message
+        }
+      ],
+      system: 'You are Jarvis, an assistant that is creative and professional.'
     };
 
-    const response = await fetch('https://api.anthropic.com/v1/complete', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': process.env.ANTHROPIC_API_VERSION || '2024-11-08'
+        'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify(payload)
     });
 
     if (!response.ok) {
       const text = await response.text();
+      console.error('Anthropic API error:', text);
       return res.status(502).json({ error: 'Anthropic API error', detail: text });
     }
 
     const data = await response.json();
-    res.status(200).json({ reply: data.completion });
+    const reply = data.content[0].text;
+    res.status(200).json({ reply });
   } catch (err) {
+    console.error('Server error:', err);
     res.status(500).json({ error: err.message });
   }
 };
