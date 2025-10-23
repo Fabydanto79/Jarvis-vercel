@@ -1,22 +1,89 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Jarvis — Assistente Creativo</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="chat-container">
-    <header class="chat-header">
-      <h1>Jarvis — l'assistente creativo e professionale</h1>
-    </header>
-    <main id="messages" class="chat-messages"></main>
-    <form id="chat-form" class="chat-form">
-      <input id="chat-input" placeholder="Scrivi un messaggio..." autocomplete="off">
-      <button type="submit">Invia</button>
-    </form>
-  </div>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis Chat</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background: #0e0e10;
+        color: #eee;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #chat-container {
+        width: 90%;
+        max-width: 600px;
+        background: #1a1a1d;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        overflow-y: auto;
+        height: 70vh;
+      }
+
+      .message {
+        margin: 10px 0;
+        line-height: 1.4;
+      }
+
+      .user {
+        color: #7ab8ff;
+        text-align: right;
+      }
+
+      .assistant {
+        color: #baffc9;
+      }
+
+      #input-area {
+        display: flex;
+        margin-top: 10px;
+        width: 90%;
+        max-width: 600px;
+      }
+
+      input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 8px 0 0 8px;
+        outline: none;
+      }
+
+      button {
+        background: #4e9eff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 0 8px 8px 0;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #007bff;
+      }
+
+      .typing {
+        font-style: italic;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-container"></div>
+
+    <div id="input-area">
+      <input type="text" id="message-input" placeholder="Scrivi un messaggio..." />
+      <button id="send-btn">Invia</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
