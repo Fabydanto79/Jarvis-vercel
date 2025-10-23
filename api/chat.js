@@ -1,4 +1,4 @@
-// Questa è una Vercel Serverless Function
+// Vercel Serverless Function per Groq
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -23,35 +23,38 @@ export default async function handler(req, res) {
     }
 
     // Controlla che la API key sia configurata
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: 'API key not configured' });
+      return res.status(500).json({ error: 'GROQ_API_KEY not configured' });
     }
 
-    // Chiamata all'API di Claude
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Chiamata all'API di Groq
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1024,
+        model: 'llama-3.1-70b-versatile',
         messages: [
+          {
+            role: 'system',
+            content: 'Sei Jarvis, un assistente AI intelligente, creativo e professionale. Rispondi sempre in italiano in modo chiaro, conciso e amichevole.',
+          },
           {
             role: 'user',
             content: message,
           },
         ],
-        system: 'Sei Jarvis, un assistente AI intelligente, creativo e professionale. Rispondi sempre in italiano in modo chiaro e conciso.',
+        temperature: 0.7,
+        max_tokens: 1024,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Anthropic API Error:', errorText);
+      console.error('Groq API Error:', errorText);
       return res.status(500).json({ 
         error: 'Errore nella chiamata API',
         details: errorText 
@@ -59,7 +62,7 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json();
-    const reply = data.content[0].text;
+    const reply = data.choices[0].message.content;
 
     return res.status(200).json({ reply });
 
