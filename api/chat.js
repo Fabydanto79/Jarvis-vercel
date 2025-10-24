@@ -1,4 +1,4 @@
-// Vercel Serverless Function per Groq
+// Vercel Serverless Function per Groq con Memoria
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message } = req.body;
+    const { message, history } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
@@ -28,6 +28,18 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'GROQ_API_KEY not configured' });
     }
 
+    // Prepara i messaggi per Groq
+    // Include la cronologia completa per mantenere il contesto
+    const messages = [
+      {
+        role: 'system',
+        content: 'Sei Jarvis, un assistente AI intelligente, creativo e professionale. Rispondi sempre in italiano in modo chiaro, conciso e amichevole. Ricorda le informazioni delle conversazioni precedenti e fai riferimento ad esse quando rilevante.',
+      },
+      ...(history || []) // Include tutta la cronologia
+    ];
+
+    console.log('Sending to Groq with history length:', history?.length || 0);
+
     // Chiamata all'API di Groq
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -36,17 +48,8 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [
-          {
-            role: 'system',
-            content: 'Sei Jarvis, un assistente AI intelligente, creativo e professionale. Rispondi sempre in italiano in modo chiaro, conciso e amichevole.',
-          },
-          {
-            role: 'user',
-            content: message,
-          },
-        ],
+        model: 'llama-3.3-70b-versatile',
+        messages: messages,
         temperature: 0.7,
         max_tokens: 1024,
       }),
